@@ -12,9 +12,7 @@
 #                                                                                           #
 # Data:       2016-06-10                                                                    #
 #                                                                                           #
-# Descricao:  Este e' um modelo de arquivo para ser utilizado para a implementacao          #
-#             do projeto pratico da disciplina de Programacao 1.                            #
-#             A descricao do projeto encontra-se no site da disciplina e trata-se           #
+# Descricao:  A descricao do projeto encontra-se no site da disciplina e trata-se           #
 #             de uma adaptacao do projeto disponivel em                                     #
 #             http://nifty.stanford.edu/2016/manley-urness-movie-review-sentiment/          #
 #             O objetivo deste projeto e' implementar um sistema de analise de              #
@@ -68,7 +66,6 @@ def readStopWordsSet(fname):
         no parametro.
     '''
     arquivo = open(fname, 'r')
-    # Le todas as palavras
     stopWordsList = list()
     for word in arquivo.readlines():
         stopWordsList.append(clean_up(word))
@@ -85,9 +82,8 @@ def readTrainingSet(fname, listStopWords):
     '''
     words = dict()
     arquivo = open(fname, "r")
-    # Le todas as palavras
     for lineReview in arquivo.readlines():
-        scoreReview = int(lineReview[0]) # Salva o primeiro char do review
+        scoreReview = int(lineReview[0]) # Salva o primeiro char do review (score)
         wordsReview = checkTokens(split_on_separators(lineReview[2:], " /-"), listStopWords)
         for word in wordsReview:
             if word not in words:
@@ -108,7 +104,7 @@ def readTestSet(fname):
         retorna um vetor/lista de pares (escore,texto) dos
         comentarios presentes no arquivo.
     '''    
-    reviews = []
+    reviews = list()
     arquivo = open(fname, "r")
     for line in arquivo.readlines():
         reviews.append((int(line[0]), line[2:]))
@@ -135,6 +131,7 @@ def computeSentiment(review,words,listStopWords):
         return 0
     else:
         for palavra in palavrasReview:
+            # Caso a palavra nao esteja no dict, e' atribuido um score medio de 2 pontos
             if palavra not in words:
                 score += 2.0
                 count += 1
@@ -162,9 +159,6 @@ def computeSumSquaredErrors(reviews,words,listStopWords):
 
 def main():
     # Os arquivos sao passados como argumentos da linha de comando para o programa
-    # Voce deve buscar mais informacoes sobre o funcionamento disso (e' parte do
-    # projeto).
-    
     # A ordem dos parametros e' a seguinte: o primeiro e' o nome do arquivo
     # com o conjunto de treinamento, o arquivo do conjunto de teste, em seguida
     # o arquivo do conjunto de stop words.
@@ -177,18 +171,17 @@ def main():
         # Le o conjunto de stop words caso seja dado um quarto argumento na chamada
         stopwords = readStopWordsSet(sys.argv[3])
     else:
-        # Se nao houver o quarto argumento, le o arquivo padrao
+        # Se nao houver o quarto argumento, le o arquivo padrao 'stopWordsSet.txt'
         stopwords = readStopWordsSet('stopWordsSet.txt')
     
-    # Lendo conjunto de treinamento e computando escore das palavras
+    # Ler conjunto de treinamento e computando escore das palavras
     words = readTrainingSet(sys.argv[1], stopwords)
     
-    # Lendo conjunto de teste
+    # Ler conjunto de teste
     reviews = readTestSet(sys.argv[2])
     
-    # Inferindo sentimento e computando soma dos quadrados dos erros
+    # Inferir sentimento e computar soma dos quadrados dos erros
     sse = computeSumSquaredErrors(reviews,words,stopwords)
-    
     print('A soma do quadrado dos erros e\': {0}'.format(sse))            
 
 if __name__ == '__main__':

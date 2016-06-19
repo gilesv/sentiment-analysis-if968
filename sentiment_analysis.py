@@ -144,12 +144,14 @@ def computeSentiment(review,words,listStopWords):
         return score/count
 
 def computeSumSquaredErrors(reviews,words,listStopWords):
-    '''    Computa a soma dos quadrados dos erros dos comentarios recebidos
+    ''' Computa a soma dos quadrados dos erros dos comentarios recebidos
         como parametro. O sentimento de um comentario e' obtido com a
         funcao computeSentiment. 
         Reviews e' um vetor de pares (escore,texto)
         Words e' um dicionario com as palavras e seus escores medios no conjunto
-        de treinamento.    
+        de treinamento.
+        listStopWords e' um vetor contendo todas as palavras que nao devem ser
+        consideradas ao computar o sentimento de um comentario.
     '''    
     sse = 0
     for review in reviews:
